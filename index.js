@@ -5,10 +5,10 @@
   const chartWidth = 800;
   const innerHeight = chartHeight - margin.top - margin.bottom;
   const innerWidth = chartWidth - margin.left - margin.right;
-  const xScale = d3.scaleTime().range([0, innerWidth]);
+  const xScale = d3.scaleLinear().range([0, innerWidth]);
   const yScale = d3.scaleLinear().range([innerHeight, 0]);
   xScale.domain([d3.min(data, d => d.Year), d3.max(data, d => d.Year)]);
-  yScale.domain([d3.min(data, d => d.Time), d3.max(data, d => d.Time)]);
+  yScale.domain([d3.min(data, d => d.Seconds), d3.max(data, d => d.Seconds)]);
   const chartContainer = d3.select('div').append('svg').attr("height", chartHeight).attr("width", chartWidth);
   const chart = chartContainer.append('g').attr("transform", `translate(${margin.left},${margin.top})`);
   const xAxis = d3.axisBottom(xScale).tickSizeOuter(0);
