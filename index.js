@@ -14,6 +14,23 @@
   // TickSizeOuter removes last empty tick and tickFormat removes comma from years
   const xAxis = d3.axisBottom(xScale).tickSizeOuter(0).tickFormat(d3.format(""));
   const yAxis = d3.axisLeft(yScale).tickSizeOuter(0);
+  
+  chart
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("data-xvalue", d => d.Year)
+    .attr("data-yvalue", d => d.Seconds)
+    .attr("cx", (d,i) => {
+      return xScale(d.Year)
+    })
+    .attr("cy", (d,i) => {
+      return  chartHeight - yScale(d.Seconds)
+    })
+    .attr("r", 5)
+
   chart.append('g').call(xAxis).attr("id", "x-axis").attr("transform", `translate(0,${innerHeight})`);
   chart.append('g').call(yAxis).attr("id", "y-axis").attr("transform", `translate(0,0)`);
   console.log(data)
