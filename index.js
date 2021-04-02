@@ -8,12 +8,12 @@
   const xScale = d3.scaleTime().range([0, innerWidth]);
   const yScale = d3.scaleTime().range([innerHeight, 0]);
   xScale.domain([new Date (d3.min(data, d => d.Year)), new Date(d3.max(data, d => d.Year))]);
-  yScale.domain([new Date(d3.min(data, d => d.Seconds)), new Date(d3.max(data, d => d.Seconds))]);
+  yScale.domain([ d3.max(data, d => d.Seconds),d3.min(data, d => d.Seconds)]);
   const chartContainer = d3.select('div').append('svg').attr("height", chartHeight).attr("width", chartWidth);
   const chart = chartContainer.append('g').attr("transform", `translate(${margin.left},${margin.top})`);
   // TickSizeOuter removes last empty tick and tickFormat removes comma from years
-  const xAxis = d3.axisBottom(xScale).tickSizeOuter(0).tickFormat(d3.format(""));
-  const yAxis = d3.axisLeft(yScale).tickSizeOuter(0).tickFormat((d,i)=> data[i].Time);
+  const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("")).ticks(12);
+  const yAxis = d3.axisLeft(yScale).tickFormat((d,i)=> data[i].Time).ticks(12)
   
   chart
     .selectAll("circle")
