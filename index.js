@@ -7,13 +7,13 @@
   const innerWidth = chartWidth - margin.left - margin.right;
   const xScale = d3.scaleTime().range([0, innerWidth]);
   const yScale = d3.scaleTime().range([innerHeight, 0]);
-  xScale.domain([new Date (d3.min(data, d => d.Year)), new Date(d3.max(data, d => d.Year))]);
-  yScale.domain([ d3.max(data, d => d.Seconds),d3.min(data, d => d.Seconds)]);
+  xScale.domain([new Date (d3.min(data, d => d.Year) - 1, 0, 1), new Date(d3.max(data, d => d.Year + 1), 0, 1)]);
+  yScale.domain([(new Date).setSeconds(d3.max(data, d => d.Seconds)), (new Date).setSeconds(d3.min(data, d => d.Seconds))]);
   const chartContainer = d3.select('div').append('svg').attr("height", chartHeight).attr("width", chartWidth);
   const chart = chartContainer.append('g').attr("transform", `translate(${margin.left},${margin.top})`);
   // TickSizeOuter removes last empty tick and tickFormat removes comma from years
-  const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("")).ticks(12);
-  const yAxis = d3.axisLeft(yScale).tickFormat((d,i)=> data[i].Time).ticks(12)
+  const xAxis = d3.axisBottom(xScale).ticks(d3.timeYear.every(2));
+  const yAxis = d3.axisLeft(yScale).tickFormat((d,i)=> d.toTimeString().split(' ')[0]).ticks(d3.timeSecond.every(15));
   
   chart
     .selectAll("circle")
@@ -24,10 +24,10 @@
     .attr("data-xvalue", d => d.Year)
     .attr("data-yvalue", d => d.Seconds)
     .attr("cx", (d,i) => {
-      return xScale(new Date(d.Year))
+      return xScale(new Date(d.Year,0,1))
     })
     .attr("cy", (d,i) => {
-      return  innerHeight - yScale(new Date(d.Seconds))
+      return  yScale((new Date).setSeconds(d.Seconds))
     })
     .attr("r", 5)
 
