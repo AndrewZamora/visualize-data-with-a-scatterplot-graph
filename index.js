@@ -7,13 +7,17 @@
   const innerWidth = chartWidth - margin.left - margin.right;
   const xScale = d3.scaleTime().range([0, innerWidth]);
   const yScale = d3.scaleTime().range([innerHeight, 0]);
-  xScale.domain([new Date (d3.min(data, d => d.Year) - 1, 0, 1), new Date(d3.max(data, d => d.Year + 1), 0, 1)]);
-  yScale.domain([(new Date).setSeconds(d3.max(data, d => d.Seconds)), (new Date).setSeconds(d3.min(data, d => d.Seconds))]);
+  // passing null to Date object returns Thu Jan 01 1970 09:00:00 GMT+0900 which allows setting seconds without having to pick a random year
+  xScale.domain([(new Date(null)).setFullYear(d3.min(data, d => d.Year) - 1), (new Date(null)).setFullYear(d3.max(data, d => d.Year + 1))]);
+  yScale.domain([(new Date(null)).setSeconds(d3.max(data, d => d.Seconds)), (new Date(null)).setSeconds(d3.min(data, d => d.Seconds))]);
   const chartContainer = d3.select('div').append('svg').attr("height", chartHeight).attr("width", chartWidth);
   const chart = chartContainer.append('g').attr("transform", `translate(${margin.left},${margin.top})`);
-  // TickSizeOuter removes last empty tick and tickFormat removes comma from years
   const xAxis = d3.axisBottom(xScale).ticks(d3.timeYear.every(2));
-  const yAxis = d3.axisLeft(yScale).tickFormat((d,i)=> d.toTimeString().split(' ')[0]).ticks(d3.timeSecond.every(15));
+  const yAxis = d3.axisLeft(yScale).tickFormat(d => {
+    // https://stackoverflow.com/a/25279340/8006073
+    const [hour, min, sec] = d.toISOString().substr(11,8).split(':')
+    return `${min}:${sec}`;
+  }).ticks(d3.timeSecond.every(15));
   
   chart
     .selectAll("circle")
@@ -24,10 +28,10 @@
     .attr("data-xvalue", d => d.Year)
     .attr("data-yvalue", d => d.Seconds)
     .attr("cx", (d,i) => {
-      return xScale(new Date(d.Year,0,1))
+      return xScale((new Date(null)).setFullYear(d.Year))
     })
-    .attr("cy", (d,i) => {
-      return  yScale((new Date).setSeconds(d.Seconds))
+    .attr("cy", d => {
+      return yScale((new Date(null)).setSeconds(d.Seconds))
     })
     .attr("r", 5)
 
