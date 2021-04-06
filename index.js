@@ -15,7 +15,7 @@
   const xAxis = d3.axisBottom(xScale).ticks(d3.timeYear.every(2));
   const yAxis = d3.axisLeft(yScale).tickFormat(d => {
     // https://stackoverflow.com/a/25279340/8006073
-    const [hour, min, sec] = d.toISOString().substr(11,8).split(':')
+    const [hour, min, sec] = d.toLocaleTimeString("en-US").split(/:| /)
     return `${min}:${sec}`;
   }).ticks(d3.timeSecond.every(15));
   
@@ -26,7 +26,11 @@
     .append("circle")
     .attr("class", "dot")
     .attr("data-xvalue", d => d.Year)
-    .attr("data-yvalue", d => d.Seconds)
+    .attr("data-yvalue", d => {
+      let time = new Date(null)
+      time.setSeconds(d.Seconds)
+       return time
+    })
     .attr("cx", (d,i) => {
       return xScale((new Date(null)).setFullYear(d.Year))
     })
