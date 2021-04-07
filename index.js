@@ -25,6 +25,7 @@
     .enter()
     .append("circle")
     .attr("class", "dot")
+    .attr("class", d => d.Doping.length === 0 ? "maybe-not-doping" : "probably-doping")
     .attr("data-xvalue", d => d.Year)
     .attr("data-yvalue", d => {
       let time = new Date(null)

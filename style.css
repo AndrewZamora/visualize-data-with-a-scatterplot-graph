@@ -5,3 +5,11 @@ body {
   align-items: center;
   justify-content: center;
 }
+
+.maybe-not-doping {
+  fill: green;
+}
+
+.probably-doping {
+  fill: red
+}
