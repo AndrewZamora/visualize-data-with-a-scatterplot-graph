@@ -18,14 +18,13 @@
     const [hour, min, sec] = d.toLocaleTimeString("en-US").split(/:| /)
     return `${min}:${sec}`;
   }).ticks(d3.timeSecond.every(15));
-  
+  const tooltip = d3.select("#title").append("div").attr("id", "tooltip");
   chart
     .selectAll("circle")
     .data(data)
     .enter()
     .append("circle")
-    .attr("class", "dot")
-    .attr("class", d => d.Doping.length === 0 ? "maybe-not-doping" : "probably-doping")
+    .attr("class", d => d.Doping.length === 0 ? "maybe-not-doping dot" : "probably-doping dot")
     .attr("data-xvalue", d => d.Year)
     .attr("data-yvalue", d => {
       let time = new Date(null)
@@ -38,7 +37,19 @@
     .attr("cy", d => {
       return yScale((new Date(null)).setSeconds(d.Seconds))
     })
-    .attr("r", 5)
+    .attr("r", 7)
+    .on("mouseover", function(d) {
+      const windowWidthOffset = (window.innerWidth - chartWidth) / 2 > 0 ? (window.innerWidth - chartWidth) / 2 : 0;
+      const windowHeightOffset = (window.innerHeight - chartHeight) / 2 > 0 ? (window.innerHeight - chartHeight) / 2 : 0;
+       d3.select("#tooltip")
+      .attr("class", "active-tooltip")
+      .style("left", `${d3.mouse(this)[0] + windowWidthOffset + 75}px`)
+      .style("top", `${d3.mouse(this)[1] + windowHeightOffset + 60}px`)
+      tooltip.html(`${d.Seconds}`)
+    })
+    .on("mouseout", () => {
+      d3.select("#tooltip").attr("class", "inactive-tooltip");
+    })
 
   chart.append('g').call(xAxis).attr("id", "x-axis").attr("transform", `translate(0,${innerHeight})`);
   chart.append('g').call(yAxis).attr("id", "y-axis").attr("transform", `translate(0,0)`);

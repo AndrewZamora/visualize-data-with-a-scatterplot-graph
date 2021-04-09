@@ -6,10 +6,16 @@ body {
   justify-content: center;
 }
 
+.dot {
+ opacity: 0.8;
+ stroke-width: 1.5;
+ stroke: black;
+}
+
 .maybe-not-doping {
-  fill: green;
+  fill: blue;
 }
 
 .probably-doping {
-  fill: red
+  fill: red;
 }
