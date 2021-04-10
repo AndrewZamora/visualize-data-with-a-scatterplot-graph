@@ -18,8 +18,8 @@
     const [hour, min, sec] = d.toLocaleTimeString("en-US").split(/:| /)
     return `${min}:${sec}`;
   }).ticks(d3.timeSecond.every(15));
-  const tooltip = d3.select("#title").append("div").attr("id", "tooltip");
-  chart
+  const tooltip = d3.select("#title").append("div").attr("id", "tooltip").style("visibility", "hidden");
+  const dots = chart
     .selectAll("circle")
     .data(data)
     .enter()
@@ -29,27 +29,34 @@
     .attr("data-yvalue", d => {
       let time = new Date(null)
       time.setSeconds(d.Seconds)
-       return time
+      return time
     })
-    .attr("cx", (d,i) => {
+    .attr("cx", (d, i) => {
       return xScale((new Date(null)).setFullYear(d.Year))
     })
     .attr("cy", d => {
       return yScale((new Date(null)).setSeconds(d.Seconds))
     })
-    .attr("r", 7)
-    .on("mouseover", function(d) {
-      const windowWidthOffset = (window.innerWidth - chartWidth) / 2 > 0 ? (window.innerWidth - chartWidth) / 2 : 0;
-      const windowHeightOffset = (window.innerHeight - chartHeight) / 2 > 0 ? (window.innerHeight - chartHeight) / 2 : 0;
-       d3.select("#tooltip")
-      .attr("class", "active-tooltip")
-      .style("left", `${d3.mouse(this)[0] + windowWidthOffset + 75}px`)
-      .style("top", `${d3.mouse(this)[1] + windowHeightOffset + 60}px`)
-      tooltip.html(`${d.Seconds}`)
+    .attr("r", 4)
+
+    dots
+    .on("mouseover", function (d) {
+      const windowWidthOffset = (window.innerWidth - chartWidth) / 2;
+      const windowHeightOffset = (window.innerHeight - chartHeight) / 2;
+        tooltip
+        .style("position", "absolute")
+        .style("background", "#333")
+        .style("color", "#FFF")
+        .style("border-radius", "4px")
+        .style("left", `${parseInt(d3.select(this).attr("cx")) + windowWidthOffset + 60}px`)
+        .style("top", `${(parseInt(d3.select(this).attr("cy")) + windowHeightOffset) - 31}px`)
+        .style("visibility", "visible")
+        .style("padding", "10px")
+        .html(`${d.Name}<br/>Year: ${d.Year}, Time: ${d.Time}<br/>${d.Doping}`)
     })
-    .on("mouseout", () => {
-      d3.select("#tooltip").attr("class", "inactive-tooltip");
-    })
+    .on("mouseout", ()=>{
+      tooltip.style("visibility", "hidden")
+    });
 
   chart.append('g').call(xAxis).attr("id", "x-axis").attr("transform", `translate(0,${innerHeight})`);
   chart.append('g').call(yAxis).attr("id", "y-axis").attr("transform", `translate(0,0)`);
