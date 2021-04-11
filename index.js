@@ -15,7 +15,7 @@
   const xAxis = d3.axisBottom(xScale).ticks(d3.timeYear.every(2));
   const yAxis = d3.axisLeft(yScale).tickFormat(d => {
     // https://stackoverflow.com/a/25279340/8006073
-    const [hour, min, sec] = d.toLocaleTimeString("en-US").split(/:| /)
+    const [hour, min, sec] = d.toLocaleTimeString("en-US").split(/:| /);
     return `${min}:${sec}`;
   }).ticks(d3.timeSecond.every(15));
   const tooltip = d3.select("#title").append("div").attr("id", "tooltip").style("visibility", "hidden");
@@ -39,11 +39,12 @@
     })
     .attr("r", 4)
 
-    dots
+  dots
     .on("mouseover", function (d) {
       const windowWidthOffset = (window.innerWidth - chartWidth) / 2;
       const windowHeightOffset = (window.innerHeight - chartHeight) / 2;
-        tooltip
+      tooltip
+        .attr("data-year", d3.select(this).attr("data-xvalue"))
         .style("position", "absolute")
         .style("background", "#333")
         .style("color", "#FFF")
@@ -54,7 +55,7 @@
         .style("padding", "10px")
         .html(`${d.Name}<br/>Year: ${d.Year}, Time: ${d.Time}<br/>${d.Doping}`)
     })
-    .on("mouseout", ()=>{
+    .on("mouseout", () => {
       tooltip.style("visibility", "hidden")
     });
 
