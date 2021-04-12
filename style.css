@@ -1,3 +1,10 @@
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
   height: 100vh;
   width: 100%;
@@ -7,9 +14,9 @@ body {
 }
 
 .dot {
- opacity: 0.8;
- stroke-width: 1.5;
- stroke: black;
+  opacity: 0.8;
+  stroke-width: 1.5;
+  stroke: black;
 }
 
 .maybe-not-doping {
