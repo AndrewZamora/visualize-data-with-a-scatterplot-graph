@@ -26,3 +26,8 @@ body {
 .probably-doping {
   fill: red;
 }
+
+h1, h2 {
+  text-align: center;
+  margin: 0;
+}
