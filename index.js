@@ -44,14 +44,18 @@
     .on("mouseover", function (d) {
       const windowWidthOffset = (window.innerWidth - chartWidth) / 2;
       const windowHeightOffset = (window.innerHeight - chartHeight) / 2;
+      // Those not accused of doping need a bigger offset because their tooltip has less text
+      const isDoping = d3.select(this).attr("class").includes("probably-doping");
+      const offsetForNonDopers = 25;
       tooltip
         .attr("data-year", d3.select(this).attr("data-xvalue"))
         .style("position", "absolute")
+        .style("font-size", "12px")
         .style("background", "#333")
         .style("color", "#FFF")
         .style("border-radius", "4px")
-        .style("left", `${parseInt(d3.select(this).attr("cx")) + windowWidthOffset + 60}px`)
-        .style("top", `${(parseInt(d3.select(this).attr("cy")) + windowHeightOffset) - 31}px`)
+        .style("left", `${parseInt(d3.select(this).attr("cx")) + windowWidthOffset + 70}px`)
+        .style("top", `${(parseInt(d3.select(this).attr("cy")) + windowHeightOffset) + (isDoping ? 10: offsetForNonDopers)}px`)
         .style("visibility", "visible")
         .style("padding", "10px")
         .html(`${d.Name}<br/>Year: ${d.Year}, Time: ${d.Time}<br/>${d.Doping}`)
